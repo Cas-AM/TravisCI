@@ -1,13 +1,15 @@
-
+sudo: required
+services:
+  -docker
 before_script:
  - sudo apt-add-repository ppa:swi-prolog/devel -y
  - sudo apt-get update -q
  - sudo apt-get install swi-prolog-nox
  - sudo apt-get install git curl
  - source <(curl -s https://raw.githubusercontent.com/TeamSPoon/PrologMUD/master/pack/prologmud/runtime/web_install.sh)
+ - docker build -t mooTest .
 
 script:
- - swipl -g "pack_install(logicmoo_utils),halt" -t 'halt(1)' 
+ - swipl -g "pack_install(logicmoo_utils),halt" -t 'halt(1)'
  - swipl -s t/test_no_repeats.plt -g run_tests,halt -t 'halt(1)'
- 
-
+ - docker run mooTest npm run test
