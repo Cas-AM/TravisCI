@@ -6,7 +6,7 @@ before_script:
  - sudo apt-get update -q
  - sudo apt-get install swi-prolog-nox
  - sudo apt-get install git curl
- - source <(curl -s https://raw.githubusercontent.com/TeamSPoon/PrologMUD/master/pack/prologmud/runtime/web_install.sh)
+# - source <(curl -s https://raw.githubusercontent.com/TeamSPoon/PrologMUD/master/pack/prologmud/runtime/web_install.sh)
  - docker build -t mooTest .
 
 script:
