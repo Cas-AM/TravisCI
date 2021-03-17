@@ -1,0 +1,38 @@
+
+services:
+ - docker
+ - conda
+before_script:
+ - sudo apt-add-repository ppa:swi-prolog/devel -y
+ - sudo apt-get update -q
+ - sudo apt-get install swi-prolog-nox
+ - sudo apt-get install curl #this may be unnessisary actually - test without it once everthing is working
+# - git curl source <(curl -s https://raw.githubusercontent.com/TeamSPoon/PrologMUD/master/pack/prologmud/runtime/web_install.sh)
+ - sudo apt-get install openjdk-8-jdk
+ - sudo apt-get install python3.6
+ - sudo apt-get install sbcl
+install: skip
+ 
+script:
+# - swipl -g "pack_install(logicmoo_utils),halt" -t 'halt(1)'
+# - swipl -s t/test_no_repeats.plt -g run_tests,halt -t 'halt(1)'
+- conda install -c conda-forge jupyterlab
+# example: curl http://example.com/file.tar -o /path/to/dir/file.tar
+ - curl https://raw.githubusercontent.com/TeamSPoon/PrologMUD/master/pack/prologmud/runtime/web_install.sh -o /tmp/file.tar
+ - source /tmp/file.tar
+
+ - curl http://beta.quicklisp.org/quicklisp.lisp  -o /tmp/ql.lisp  
+ - sbcl --no-sysinit --no-userinit --load /tmp/ql.lisp \
+       --eval '(quicklisp-quickstart:install :path "~/.quicklisp")' \
+       --eval '(ql:add-to-init-file)' \
+       --quit
+
+EXPOSE 8080
+# - docker-compose build
+# a build command that uses the current directory as context:    docker build .
+# - docker build -f /path/to/a/Dockerfile .
+# You can specify a repository and tag at which to save the new image if the build succeeds:
+#- docker build -t shykes/myapp .
+- docker build -t moo-test .
+- docker run moo-test npm run test
+- docker save -o /tmp/container.tar moo-test
